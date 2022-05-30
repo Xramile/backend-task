@@ -6,7 +6,9 @@ const dbURL = process.env.DB_URI as unknown as string;
 // Connect and listen
 export const connect = () => {
   mongoose
-    .connect(dbURL, {})
+    .connect(dbURL, {
+      dbName: 'xramile-blog',
+    })
     .then(() => {
       console.log(`DB Connected.`);
     })
