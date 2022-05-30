@@ -67,35 +67,37 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function (req, res, next): void {
   next(createError(404));
 });
 
 // error handler
-app.use(async function (
-  err: HttpError,
-  req: Request,
-  res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _next: NextFunction
-) {
-  if (process.env.NODE_ENV === 'production') {
-    try {
-      const errLine = `${new Date().toISOString()}\n----\n${err}\n====\n`;
-      await appendFile(
-        path.join(__dirname, '..', 'logs', 'error.log'),
-        errLine
-      );
-    } catch (err) {
-      console.error(err);
+app.use(
+  async (
+    err: HttpError,
+    req: Request,
+    res: Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _next: NextFunction
+  ): Promise<void> => {
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        const errLine = `${new Date().toISOString()}\n----\n${err}\n====\n`;
+        await appendFile(
+          path.join(__dirname, '..', 'logs', 'error.log'),
+          errLine
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      console.log(err);
     }
-  } else {
-    console.log(err);
+    res.status(err.status || 500).json({
+      status: 'error',
+      message: err.msg || 'SERVER_ERROR',
+    });
   }
-  res.status(err.status || 500).json({
-    status: 'error',
-    message: err.msg || 'SERVER_ERROR',
-  });
-});
+);
 
 export default app;
