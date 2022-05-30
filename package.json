@@ -4,7 +4,6 @@
   "description": "xramile backend-task",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run build",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "build": "tsc",
