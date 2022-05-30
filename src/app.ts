@@ -1,4 +1,3 @@
-import { Errors } from './shared/errors';
 import createError, { HttpError } from 'http-errors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
@@ -9,9 +8,11 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import logger from 'morgan';
 
+import { Errors, ErrorStatus } from './shared/errors';
+
 //routes
-import apiRouter from 'routes/api';
-import responseFactory from 'helpers/responseFactory';
+import apiRouter from './routes/api';
+import responseFactory from './helpers/responseFactory';
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _next: NextFunction
   ): Promise<void> => {
+    // logging
     if (process.env.NODE_ENV === 'production') {
       try {
         const errLine = `${new Date().toISOString()}\n----\n${err}\n====\n`;
@@ -95,11 +97,21 @@ app.use(
     } else {
       console.log(err);
     }
-    res.status(err.status || 500).json(
-      responseFactory.error({
-        message: err.msg || Errors.SERVER_ERROR,
-      })
-    );
+
+    // return
+    if (typeof err === 'string') {
+      res.status(ErrorStatus[err] || 400).json(
+        responseFactory.fail(null, {
+          message: err,
+        })
+      );
+    } else {
+      res.status(400).json(
+        responseFactory.error({
+          message: Errors.Error,
+        })
+      );
+    }
   }
 );
 

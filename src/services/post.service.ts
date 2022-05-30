@@ -1,8 +1,8 @@
-import { Errors } from './../shared/errors';
 import { ObjectId } from 'mongoose';
-import { Post } from './../models';
-import { PostInterface } from './../shared/types/Post';
-import { PaginationInterface } from './../shared/types/pagination';
+import { Errors } from '../shared/errors';
+import { Post } from '../models';
+import { PostInterface } from '../shared/types/Post';
+import { PaginationInterface } from '../shared/types/pagination';
 
 export const createPost = (post: PostInterface) => {
   return new Promise<{ post: PostInterface }>(async (resolve, reject) => {
@@ -11,7 +11,7 @@ export const createPost = (post: PostInterface) => {
       await newPost.save();
       resolve({ post: newPost });
     } catch (err) {
-      reject({ status: 400, err });
+      reject(err);
     }
   });
 };
@@ -113,7 +113,7 @@ export const getPosts = ({
 
       resolve({ posts, pagination });
     } catch (err) {
-      reject({ status: 400, err });
+      reject(err);
     }
   });
 };
@@ -133,15 +133,11 @@ export const getPost = ({
       }).populate('user');
 
       if (!post) {
-        throw new Error(Errors.NOT_FOUND);
+        throw Errors.NOT_FOUND;
       }
       resolve({ post });
     } catch (err) {
-      let status = 400;
-      if ((err as Error).message === Errors.NOT_FOUND) {
-        status = 404;
-      }
-      reject({ status, err });
+      reject(err);
     }
   });
 };
@@ -167,15 +163,11 @@ export const updatePost = ({
         { new: true }
       );
       if (!post) {
-        throw new Error(Errors.NOT_FOUND);
+        throw Errors.NOT_FOUND;
       }
       resolve({ post });
     } catch (err) {
-      let status = 400;
-      if ((err as Error).message === Errors.NOT_FOUND) {
-        status = 404;
-      }
-      reject({ status, err });
+      reject(err);
     }
   });
 };

@@ -13,10 +13,11 @@ class ResonseFactory {
     };
   }
 
-  fail(data: unknown): JsendResponse {
+  fail(data: unknown, other: { [key: string]: unknown } = {}): JsendResponse {
     return {
       status: 'fail',
       ...(data ? { data } : {}),
+      ...other,
     };
   }
 

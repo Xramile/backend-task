@@ -1,6 +1,6 @@
-import { Errors } from './../shared/errors';
-import { createToken } from './../helpers/jwt';
-import { User } from 'models';
+import { Errors } from '../shared/errors';
+import { createToken } from '../helpers/jwt';
+import { User } from '../models';
 import { UserInterface } from '../shared/types/user';
 
 export const createUser = (user: Required<UserInterface>) => {
@@ -13,8 +13,13 @@ export const createUser = (user: Required<UserInterface>) => {
       await newUser.save();
 
       resolve({ user: newUser });
-    } catch (err) {
-      reject({ status: 400, err });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err.name === 'MongoServerError' && err.code === 11000) {
+        reject(Errors.EXISTS);
+      } else {
+        reject(err);
+      }
     }
   });
 };
@@ -35,11 +40,11 @@ export const login = ({
     try {
       // check email
       const user = await User.findOne({ email });
-      if (!user) throw new Error(Errors.INCORECT_CREDINTIAL);
+      if (!user) throw Errors.INCORECT_CREDINTIAL;
 
       // check password
       const isValid = await user.isValidPass(password);
-      if (!isValid) throw new Error(Errors.INCORECT_CREDINTIAL);
+      if (!isValid) throw Errors.INCORECT_CREDINTIAL;
 
       // create token
       const token = createToken({ id: user._id }, rememberMe);
@@ -47,12 +52,9 @@ export const login = ({
         token,
         user,
       });
-    } catch (err) {
-      let status = 400;
-      if ((err as Error).message === Errors.INCORECT_CREDINTIAL) {
-        status = 401;
-      }
-      reject({ status, err });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      reject(err);
     }
   });
 };

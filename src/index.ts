@@ -1,7 +1,7 @@
 // .env
 import 'dotenv/config';
 // db connect
-import { connect } from 'models/database';
+import { connect } from './models/database';
 connect();
 
 // serve app

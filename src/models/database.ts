@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 // init
-const dbURL = process.env.DB as unknown as string;
+const dbURL = process.env.DB_URI as unknown as string;
 
 // Connect and listen
 export const connect = () => {
