@@ -5,4 +5,6 @@ export interface PostInterface {
   user: ObjectId | UserInterface;
   title: string;
   content: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
