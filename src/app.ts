@@ -1,3 +1,4 @@
+import { Errors } from './shared/errors';
 import createError, { HttpError } from 'http-errors';
 import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
@@ -68,7 +69,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next): void {
+app.use((req: Request, res: Response, next: NextFunction): void => {
   next(createError(404));
 });
 
@@ -96,7 +97,7 @@ app.use(
     }
     res.status(err.status || 500).json(
       responseFactory.error({
-        message: err.msg || 'SERVER_ERROR',
+        message: err.msg || Errors.SERVER_ERROR,
       })
     );
   }

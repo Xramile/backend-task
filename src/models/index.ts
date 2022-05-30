@@ -1,2 +1,2 @@
-export * as Post from './Post';
-export * as User from './user';
+export { default as Post } from './Post';
+export { default as User } from './user';

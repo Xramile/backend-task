@@ -1,4 +1,4 @@
-import { User } from './../types/user';
+import { UserInterface } from '../shared/types/user';
 import mongoose, {
   CallbackError,
   CallbackWithoutResultAndOptionalError,
@@ -26,8 +26,8 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.methods.toJSON = function (): User {
-  const user: User = this.toObject();
+userSchema.methods.toJSON = function (): UserInterface {
+  const user: UserInterface = this.toObject();
   delete user.hash;
   return user;
 };
@@ -61,4 +61,4 @@ userSchema.methods.isValidPass = async function (
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export default User;
