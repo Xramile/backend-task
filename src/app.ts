@@ -10,6 +10,7 @@ import logger from 'morgan';
 
 //routes
 import apiRouter from 'routes/api';
+import responseFactory from 'helpers/responseFactory';
 
 const app = express();
 
@@ -93,10 +94,11 @@ app.use(
     } else {
       console.log(err);
     }
-    res.status(err.status || 500).json({
-      status: 'error',
-      message: err.msg || 'SERVER_ERROR',
-    });
+    res.status(err.status || 500).json(
+      responseFactory.error({
+        message: err.msg || 'SERVER_ERROR',
+      })
+    );
   }
 );
 
