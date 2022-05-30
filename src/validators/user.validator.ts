@@ -1,13 +1,8 @@
 import { check, oneOf } from 'express-validator';
 import { ValidationErrors } from '../shared/errors';
 
-export const registerValidation = [
+const updatable = [
   check('name').bail().trim().notEmpty().withMessage(ValidationErrors.REQUIRED),
-  check('email')
-    .bail()
-    .trim()
-    .notEmpty()
-    .withMessage(ValidationErrors.REQUIRED),
   check('password')
     .bail()
     .trim()
@@ -17,8 +12,17 @@ export const registerValidation = [
     .withMessage('NUMBER_MIN_8_MAX_25'),
 ];
 
+export const registerValidation = [
+  ...updatable,
+  check('email')
+    .bail()
+    .trim()
+    .notEmpty()
+    .withMessage(ValidationErrors.REQUIRED),
+];
+
 export const updateUserValidation = [
-  oneOf(registerValidation, ValidationErrors.NO_UPDATE),
+  oneOf(updatable, ValidationErrors.NO_UPDATE),
 ];
 export const loginValidation = [
   check('email').trim().notEmpty().withMessage(ValidationErrors.REQUIRED),
