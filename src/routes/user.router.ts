@@ -1,9 +1,13 @@
+import { isAuth } from './../middlewares/auth.middleware';
 import { Router } from 'express';
 
 import { userController } from '../controllers';
 import { userValidators } from '../validators';
 
-import { catchValidationError } from '../middlewares/validationError';
+import {
+  catchValidationError,
+  catchValidationErrorForUpdates,
+} from '../middlewares/validationError';
 
 const router = Router();
 
@@ -19,6 +23,14 @@ router.post(
   userValidators.loginValidation,
   catchValidationError,
   userController.login
+);
+
+router.patch(
+  '/',
+  isAuth,
+  userValidators.updateUserValidation,
+  catchValidationErrorForUpdates,
+  userController.updateOne
 );
 
 export default router;

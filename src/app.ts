@@ -49,7 +49,7 @@ app.use(['/assets'], express.static(path.join(__dirname, 'assets')));
 if (process.env.NODE_ENV === 'production') {
   // log
   const accessLogStream = createWriteStream(
-    path.join(__dirname, 'logs', 'access.log'),
+    path.join(__dirname, '..', 'logs', 'access.log'),
     { flags: 'a' }
   );
   app.use(

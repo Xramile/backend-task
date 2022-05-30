@@ -34,6 +34,6 @@ router
     catchValidationErrorForUpdates,
     postController.updateOne
   )
-  .delete(isAuth, postController.delteOne);
+  .delete(isAuth, postController.deleteOne);
 
 export default router;

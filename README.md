@@ -6,12 +6,12 @@ We need to create a very simple blog REST API, which should give users ability t
 
 ## Main Functionality
 
-- Register endpoint
-- Login endpoint
-- Create post endpoint
-- List all posts endpoint
-- Edit only user related posts endpoint
-- Delete only user related posts endpoint
+[x] Register endpoint
+[x] Login endpoint
+[x] Create post endpoint
+[x] List all posts endpoint
+[x] Edit only user related posts endpoint
+[x] Delete only user related posts endpoint
 
 ## Requirements
 

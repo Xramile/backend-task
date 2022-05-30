@@ -8,10 +8,11 @@ export const create = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { user, title, content } = matchedData(req);
+  const { title, content } = matchedData(req);
+  const { userId } = res.locals;
   try {
     const { post } = await postService.createPost({
-      user,
+      user: userId,
       title,
       content,
     });
@@ -67,17 +68,14 @@ export const updateOne = async (
 ) => {
   const { postId } = req.params;
   const { userId } = res.locals;
-  const { title, content } = matchedData(req);
+  const data = matchedData(req);
 
   const whiteList = ['title', 'content'];
   try {
     const { post } = await postService.updatePost({
       postId,
       userId,
-      updates: {
-        title,
-        content,
-      },
+      updates: data,
       whiteList,
     });
 
@@ -87,7 +85,7 @@ export const updateOne = async (
   }
 };
 
-export const delteOne = async (
+export const deleteOne = async (
   req: Request,
   res: Response,
   next: NextFunction

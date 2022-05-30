@@ -58,3 +58,36 @@ export const login = ({
     }
   });
 };
+
+export const updateUser = ({
+  id,
+  updates = {},
+  whiteList = [],
+}: {
+  id: string;
+  updates: { [key: string]: unknown };
+  whiteList: string[];
+}) => {
+  return new Promise<{ user: UserInterface }>(async (resolve, reject) => {
+    const allowedUpdates = Object.fromEntries(
+      whiteList.map((x) => [x, updates[x]]).filter((obj) => !!obj[1])
+    );
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: id },
+        { $set: allowedUpdates },
+        { new: true }
+      );
+      if (!user) {
+        throw Errors.NOT_FOUND;
+      }
+      resolve({ user });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err.kind === 'ObjectId') {
+        reject(Errors.NOT_FOUND);
+      }
+      reject(err);
+    }
+  });
+};

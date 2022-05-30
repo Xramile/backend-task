@@ -30,7 +30,7 @@ export const getPosts = ({
   };
   sort?: {
     sortBy: keyof PostInterface;
-    sortType: 1 | -1;
+    sortType: number;
   };
   page: number;
   limit: number;
@@ -43,6 +43,7 @@ export const getPosts = ({
     if (!limit || limit < 1) limit = 10;
     const skip = page * limit - limit;
 
+    // match query
     const query = {
       ...(queryData.title
         ? {
@@ -60,6 +61,7 @@ export const getPosts = ({
         : {}),
     };
     try {
+      // pagination data
       const total = await Post.countDocuments(query);
       const pages = Math.ceil(total / limit);
 
@@ -75,6 +77,7 @@ export const getPosts = ({
         },
       };
 
+      // get data with users
       if (page > pages)
         return resolve({
           posts: [],
@@ -87,13 +90,13 @@ export const getPosts = ({
             createdAt: -1,
           },
         },
-        { $skip: skip },
-        { $limit: limit },
+        { $skip: +skip },
+        { $limit: +limit },
         ...(sort.sortBy
           ? [
               {
                 $sort: {
-                  [sort.sortBy]: sort.sortType || 1,
+                  [sort.sortBy]: (+sort.sortType as unknown as 1 | -1) || 1,
                 },
               },
             ]
@@ -149,8 +152,7 @@ export const getPost = (postId: string) => {
         throw Errors.NOT_FOUND;
       }
       resolve({ post });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+    } catch (err) {
       reject(err);
     }
   });
@@ -169,7 +171,7 @@ export const updatePost = ({
 }) => {
   return new Promise<{ post: PostInterface }>(async (resolve, reject) => {
     const allowedUpdates = Object.fromEntries(
-      whiteList.map((x) => [x, updates[x]]).filter(([key, value]) => !!value)
+      whiteList.map((x) => [x, updates[x]]).filter((obj) => !!obj[1])
     );
     try {
       const post = await Post.findOneAndUpdate(

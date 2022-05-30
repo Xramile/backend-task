@@ -40,3 +40,25 @@ export const login = async (
     next(err);
   }
 };
+
+export const updateOne = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = res.locals;
+  const data = matchedData(req);
+
+  const whiteList = ['name', 'passsword'];
+  try {
+    const { user } = await userService.updateUser({
+      id: userId,
+      updates: data,
+      whiteList,
+    });
+
+    res.json(responseFactory.success(user));
+  } catch (err) {
+    next(err);
+  }
+};
