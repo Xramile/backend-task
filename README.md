@@ -1,5 +1,8 @@
 # Simple Blog REST API
 
+- [Swagger Docs](https://app.swaggerhub.com/apis-docs/sayedayman/xramile-task/1.0.0)
+- [Online Link](https://xramile-test.herokuapp.com/)
+
 ## Description
 
 We need to create a very simple blog REST API, which should give users ability to register and login, also make posts and only delete or edit their posts.
