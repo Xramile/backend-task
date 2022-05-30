@@ -71,7 +71,7 @@ app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: NextFunction): void => {
-  next(createError(404));
+  next(Errors.NOT_FOUND);
 });
 
 // error handler
